@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, ArrowLeft, Loader2 } from 'lucide-react';
+import { forgotPassword } from '../../services/authService';
 
 const index = () => {
   const [email, setEmail] = useState('');
@@ -13,12 +14,13 @@ const index = () => {
     
     try {
       console.log('Forgot password email:', email);
+      const {data} = await forgotPassword({email})
       await new Promise(resolve => setTimeout(resolve, 1500));
-      setMessage('If an account with this email exists, we have sent a password reset link.');
+      setMessage(data.message);
       setError('');
       setEmail('');
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setError(err.response?.data?.message || err.message);
       setMessage('');
     } finally {
       setIsLoading(false);
@@ -71,11 +73,33 @@ const index = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#070528] text-white font-medium py-3 rounded-xl hover:scale-105 transition duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg"
+            className="flex items-center justify-center gap-3 w-full bg-[#070528] text-white font-medium py-3 rounded-xl hover:scale-105 transition duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg"
             disabled={isLoading}
           >
             {isLoading ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                />
+              </svg>
+              Processing...
+              </>
             ) : (
               'Send Reset Link'
             )}
