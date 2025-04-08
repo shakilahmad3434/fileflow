@@ -1,13 +1,50 @@
-# Node
-backend/node_modules/
-node_modules/
-.env
-
-# React
-frontend/node_modules/
-frontend/.env
-build/
-dist/
-
-# Logs
+# ======================================
+# Global
+# ======================================
+.DS_Store
+Thumbs.db
 *.log
+*.env
+.env.*
+!.env.example
+
+# Ignore local development folders
+.vscode/
+.idea/
+*.swp
+
+# ======================================
+# Node / Backend
+# ======================================
+backend/node_modules/
+backend/dist/
+backend/build/
+backend/coverage/
+backend/.env
+backend/.env.local
+backend/.env.development
+backend/.env.production
+backend/npm-debug.log*
+
+# ======================================
+# React / Frontend
+# ======================================
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.parcel-cache/
+
+# ======================================
+# Optional: Test & Cache
+# ======================================
+coverage/
+.cache/
+.nyc_output/
+jest-test-results.json
