@@ -1,6 +1,8 @@
 const UserModel = require("../models/user.model");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const nodemailer = require('nodemailer')
 
 const signup = async (req, res) => {
   try {
@@ -93,7 +95,34 @@ const forgotPassword = async (req, res) => {
   }
 }
 
+// reset password
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const user = await UserModel.findOne({
+      resetToken: token,
+      resetTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user)
+      return res.status(400).json({ success: false, message: "Token invalid or expired" });
+
+    user.password = password;
+    user.resetToken = undefined;
+    user.resetTokenExpires = undefined;
+    await user.save();
+
+    res.status(201).json({success: true, message: "Password reset successful" });
+  } catch (err) {
+    res.status(500).json({success: false, message: err.message });
+  }
+}
+
 module.exports = {
   signup,
-  login
+  login,
+  forgotPassword,
+  resetPassword
 }
