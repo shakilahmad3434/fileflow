@@ -1,0 +1,29 @@
+{
+  "name": "fileflow",
+  "version": "1.0.0",
+  "description": "FileFlow is an all-in-one file management platform that combines secure file sharing, personal cloud storage, image processing, document parsing, audio management, and cloud integration. Users can choose different service tiers based on their needs, from simple file sharing to advanced document processing.",
+  "keywords": [
+    "FileFlow",
+    "advance file sharing",
+    "google drive",
+    "personal cloud storage"
+  ],
+  "license": "ISC",
+  "author": "Shakil Ahmad",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.2"
+  }
+}
