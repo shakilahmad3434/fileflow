@@ -48,6 +48,51 @@ const login = async (req, res) => {
   }
 }
 
+// forgot password
+const forgotPassword = async (req, res) => {
+  try {
+    const {email} = req.body
+    if(!email)
+      return res.status(404).json({success: false, message: "Email is required."})
+
+    const user = await UserModel.findOne({email})
+
+    if(!user)
+      return res.status(404).json({success: false, message: "User not found"})
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetToken = token;
+    user.resetTokenExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    // Email sending (configure with your SMTP)
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER, // Gmail address
+        pass: process.env.EMAIL_PASS  // Gmail App Password
+      }
+    });
+
+    const resetURL = `${process.env.DOMAIN}/reset-password/${token}`;
+    const mailOptions = {
+      to: user.email,
+      from: process.env.EMAIL_USER,
+      subject: 'Password Reset Link',
+      html: `<p>You requested a password reset</p>
+             <p><a href="${resetURL}">Click to reset</a></p>`
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).json({ message: "Reset link sent to your email" });
+
+
+  } catch (err) {
+    res.status(500).json({success: false, message: err.message})
+  }
+}
+
 module.exports = {
   signup,
   login
