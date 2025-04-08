@@ -1,6 +1,8 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
 import { login } from '../../services/authService';
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 
 const index = () => {
   const [formData, setFormData] = useState({
@@ -8,8 +10,9 @@ const index = () => {
     password: '',
     rememberMe: false
   });
-
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
@@ -26,11 +29,24 @@ const index = () => {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault()
+      setLoading(true)
       const payload = {email: formData.email, password:formData.password}
       const {data} = await login(payload)
-      console.log(data)
+
+      if(formData.rememberMe)
+      {
+        localStorage.setItem('authToken', data.token)
+      }else{
+        sessionStorage.setItem('authToken', data.token)
+      }
+
+      toast.success(data.message, {duration: 3000})
+      setTimeout(() => {navigate('/dashboard')}, 3000)
+
     } catch (err) {
-      console.error('Login failed:', err.response?.data?.message || err.message);
+      toast.error(err.response?.data?.message || err.message, {duration: 3000})
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -158,9 +174,35 @@ const index = () => {
               <div>
                 <button 
                   type="submit" 
-                  className="w-full bg-[#070528] text-white font-medium py-3 rounded-xl hover:scale-105 transition duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg"
+                  className="w-full flex gap-3 items-center justify-center bg-[#070528] text-white font-medium py-3 rounded-xl hover:scale-105 transition duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-lg"
                 >
-                  Sign in to account
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                        />
+                      </svg>
+                      Processing...
+                    </>
+                  ) : (
+                    "Sign in to account"
+                  )}
                 </button>
               </div>
             </form>
@@ -200,6 +242,7 @@ const index = () => {
           </div>
         </div>
       </div>
+      <Toaster position="top-right" reverseOrder={false} />
     </div>
   );
 };
