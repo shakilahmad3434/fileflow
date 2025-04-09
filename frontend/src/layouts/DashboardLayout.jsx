@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import AdminSidebar from '../components/dashboard/AdminSidebar';
+import Sidebar from '../components/dashboard/Sidebar';
 
 const DashboardLayout = () => {
   return (
-    <div>
-      <AdminSidebar />
+    <div className='flex min-h-screen bg-gray-900 text-white'>
+      <Sidebar />
       <main>
         <Outlet /> {/* This renders the child page */}
       </main>

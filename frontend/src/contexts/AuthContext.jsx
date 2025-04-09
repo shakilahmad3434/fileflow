@@ -1,9 +1,14 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Replace with real logic
+
+  useEffect(() => {
+    const token = localStorage.getItem("authToken") || sessionStorage.getItem('authToken');
+    token ? setIsAuthenticated(true) : setIsAuthenticated(false)
+  }, [])
 
   const login = () => setIsAuthenticated(true);
   const logout = () => setIsAuthenticated(false);

@@ -14,6 +14,7 @@ import Login from "./pages/public/Login";
 import Signup from "./pages/public/Signup";
 import ForgotPassword from "./pages/public/ForgotPassword";
 import ResetPassword from "./pages/public/ResetPassword";
+import NotFound from './pages/public/NotFound';
 
 // Admin Pages
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -36,6 +37,8 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/reset-password/:token' element={<ResetPassword />} />
+            {/* Not Found Routes  */}
+            <Route path='*' element={<NotFound />} />
           </Route>
         </Route>
 
