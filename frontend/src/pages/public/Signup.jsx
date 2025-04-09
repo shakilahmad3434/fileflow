@@ -4,7 +4,7 @@ import { useNavigate} from 'react-router-dom'
 import { signup } from "../../services/authService";
 import toast, { Toaster } from "react-hot-toast";
 
-const index = () => {
+const Signup = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     email: "",
@@ -408,4 +408,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Signup;

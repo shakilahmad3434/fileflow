@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, ArrowLeft, Loader2 } from 'lucide-react';
+import { Mail, ArrowLeft } from 'lucide-react';
 import { forgotPassword } from '../../services/authService';
 
-const index = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -120,4 +120,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ForgotPassword;

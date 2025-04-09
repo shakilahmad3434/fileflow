@@ -4,7 +4,7 @@ import { login } from '../../services/authService';
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 
-const index = () => {
+const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -247,4 +247,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Login;

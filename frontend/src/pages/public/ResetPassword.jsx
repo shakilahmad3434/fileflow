@@ -3,7 +3,7 @@ import { Lock, ArrowLeft } from 'lucide-react';
 import { resetPassword } from '../../services/authService';
 import { useParams } from 'react-router-dom';
 
-const index = () => {
+const ResetPassword = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -154,4 +154,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default ResetPassword;

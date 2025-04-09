@@ -1,30 +1,52 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Signup from './pages/Signup'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
-import Navbar from './components/layout/Navbar'
-import Footer from './components/landing/Footer'
-import PrivateRoute from './components/PrivateRoute'
-import PublicRoute from './components/PublicRoute'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+// Layouts
+import MainLayout from "./layouts/MainLayout";
+import DashboardLayout from "./layouts/DashboardLayout";
+
+// Routes
+import PublicRoute from "./routes/PublicRoute";
+import ProtectedRoute from "./routes/ProtectedRoute";
+
+// Public Pages
+import Home from "./pages/public/Home";
+import Login from "./pages/public/Login";
+import Signup from "./pages/public/Signup";
+import ForgotPassword from "./pages/public/ForgotPassword";
+import ResetPassword from "./pages/public/ResetPassword";
+
+// Admin Pages
+import Dashboard from "./pages/dashboard/Dashboard";
+
+// context
+import { useAuth } from './contexts/AuthContext';
+
 
 const App = () => {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <BrowserRouter>
-      <Navbar />
+    <Router>
       <Routes>
-        <Route path='/' element={<PublicRoute> <Home /> </PublicRoute>} />
-        <Route path='/signup' element={<PublicRoute> <Signup /> </PublicRoute>} />
-        <Route path='/login' element={<PublicRoute> <Login /> </PublicRoute>} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password/:token' element={<ResetPassword />} />
-        <Route path='/dashboard' element={<PrivateRoute> <Dashboard /> </PrivateRoute>} />
+        {/* Public Routes */}
+        <Route element={<PublicRoute isAuthenticated={isAuthenticated} />}>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
+            <Route path='/reset-password/:token' element={<ResetPassword />} />
+          </Route>
+        </Route>
+
+        {/* Protected Dashboard Routes */}
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Route>
+        </Route>
       </Routes>
-      <Footer />
-    </BrowserRouter>
+    </Router>
   )
 }
 
