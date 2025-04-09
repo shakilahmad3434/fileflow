@@ -67,11 +67,11 @@ const Sidebar = () => {
 
       <div className="flex-1 overflow-auto">
         <SidebarSection title="OVERVIEW">
-          <SidebarItem icon={<LayoutDashboard size={18} />} label="Overview Storage" active={true} href="/storage" />
+          <SidebarItem icon={<LayoutDashboard size={18} />} label="Overview Storage" active={true} href="/dashboard" />
         </SidebarSection>
         
         <SidebarSection title="FILE MANAGER">
-          <SidebarItem icon={<Share size={18} />} label="My Storage" />
+          <SidebarItem icon={<Share size={18} />} label="My Storage" href="/storage" />
           <SidebarItem icon={<Clock size={18} />} label="Recents" count={2} />
           <SidebarItem icon={<Star size={18} />} label="Favorites" count={4} />
           <SidebarItem icon={<Trash2 size={18} />} label="Trash" />

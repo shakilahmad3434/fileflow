@@ -21,6 +21,7 @@ import Dashboard from "./pages/dashboard/Dashboard";
 
 // context
 import { useAuth } from './contexts/AuthContext';
+import MyStorage from './pages/dashboard/MyStorage';
 
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/storage" element={<MyStorage />} />
           </Route>
         </Route>
       </Routes>
