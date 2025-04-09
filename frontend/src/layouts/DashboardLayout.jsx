@@ -8,7 +8,6 @@ const DashboardLayout = () => {
       <main className='w-full'>
         <Outlet /> {/* This renders the child page */}
       </main>
-      {/* <AdminFooter /> */}
     </div>
   );
 };

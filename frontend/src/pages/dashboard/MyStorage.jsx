@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Upload, Download, File, Folder, Image, Video, FileText, MoreHorizontal, Trash2, Star, Clock, Share, Edit, Copy, AlertCircle } from 'lucide-react';
+import { 
+  Search, Upload, Download, File, Folder, Image, Video, FileText, 
+  MoreHorizontal, Trash2, Star, Clock, Share, Edit, Copy, AlertCircle,
+  X, FileUp, FolderUp, Film, Paperclip, Music
+} from 'lucide-react';
+import Header from '../../components/dashboard/Header';
 
-const MyStorage = () => {
+// Main Storage Component
+export default function MyStorage() {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [headerMenuOpen, setHeaderMenuOpen] = useState(false);
   const [activeFileMenu, setActiveFileMenu] = useState(null);
   const [menuPositions, setMenuPositions] = useState({});
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   
   const headerMenuRef = useRef(null);
   const fileMenuRefs = useRef({});
@@ -82,6 +89,8 @@ const MyStorage = () => {
   };
 
   return (
+    <div className="flex-1 flex flex-col">
+      <Header />
     <div className="flex flex-col h-full bg-gray-900 text-white">
       {/* Header with search and actions */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800">
@@ -97,7 +106,10 @@ const MyStorage = () => {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md flex items-center text-sm">
+          <button 
+            className="bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md flex items-center text-sm hover:scale-104 transition duration-200"
+            onClick={() => setIsUploadModalOpen(true)}
+          >
             <Upload className="h-4 w-4 mr-2" />
             Upload
           </button>
@@ -120,7 +132,13 @@ const MyStorage = () => {
                   <Folder className="h-4 w-4 mr-3" />
                   New Folder
                 </button>
-                <button className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 flex items-center">
+                <button 
+                  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-700 flex items-center"
+                  onClick={() => {
+                    setHeaderMenuOpen(false);
+                    setIsUploadModalOpen(true);
+                  }}
+                >
                   <Upload className="h-4 w-4 mr-3" />
                   Upload Files
                 </button>
@@ -143,10 +161,10 @@ const MyStorage = () => {
       <div className="p-4 bg-gray-800 m-4 rounded-lg">
         <p className="text-sm font-medium text-gray-300 mb-2">Storage Usage</p>
         <div className="flex items-center">
-          <div className="w-full bg-gray-700 rounded-full h-2.5">
-            <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '35%' }}></div>
+          <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="bg-orange-600 h-2 rounded-full" style={{ width: '35%' }}></div>
           </div>
-          <span className="ml-4 text-sm">35.2 GB of 100 GB</span>
+          <span className="block ml-4 text-sm">35.2 GB of 100 GB</span>
         </div>
       </div>
       
@@ -279,8 +297,261 @@ const MyStorage = () => {
           Total: {filteredFiles.reduce((acc, file) => acc + parseFloat(file.size), 0).toFixed(1)} MB
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {isUploadModalOpen && (
+        <UploadModal onClose={() => setIsUploadModalOpen(false)} />
+      )}
+    </div>
     </div>
   );
 }
 
-export default MyStorage;
+// Upload Modal Component
+function UploadModal({ onClose }) {
+  const [uploadType, setUploadType] = useState('file');
+  const [dragging, setDragging] = useState(false);
+  const [files, setFiles] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const fileInputRef = useRef(null);
+
+  // Handle drag events
+  const handleDragEnter = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    handleFiles(droppedFiles);
+  };
+
+  // Handle file selection
+  const handleFileSelect = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    handleFiles(selectedFiles);
+  };
+
+  // Process the files
+  const handleFiles = (newFiles) => {
+    const updatedFiles = [...files];
+    
+    newFiles.forEach(file => {
+      // Check if file already exists in the list
+      if (!files.some(f => f.name === file.name && f.size === file.size)) {
+        updatedFiles.push(file);
+        // Initialize progress for this file
+        setUploadProgress(prev => ({
+          ...prev,
+          [file.name]: 0
+        }));
+      }
+    });
+    
+    setFiles(updatedFiles);
+    
+    // Simulate upload progress for each file
+    updatedFiles.forEach(file => {
+      if (uploadProgress[file.name] === 0) {
+        simulateFileUpload(file.name);
+      }
+    });
+  };
+
+  // Remove a file from the list
+  const removeFile = (fileName) => {
+    setFiles(files.filter(file => file.name !== fileName));
+    setUploadProgress(prev => {
+      const updated = {...prev};
+      delete updated[fileName];
+      return updated;
+    });
+  };
+
+  // Simulate file upload progress
+  const simulateFileUpload = (fileName) => {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.random() * 10;
+      if (progress > 100) {
+        progress = 100;
+        clearInterval(interval);
+      }
+      
+      setUploadProgress(prev => ({
+        ...prev,
+        [fileName]: Math.floor(progress)
+      }));
+    }, 300);
+  };
+
+  // Get file type icon
+  const getFileTypeIcon = (fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    
+    const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'];
+    const videoTypes = ['mp4', 'mov', 'avi', 'mkv', 'webm'];
+    const documentTypes = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'ppt', 'pptx'];
+    const archiveTypes = ['zip', 'rar', '7z', 'tar', 'gz'];
+    const audioTypes = ['mp3', 'wav', 'ogg', 'flac', 'aac'];
+    
+    if (imageTypes.includes(extension)) return <Image className="text-red-500" />;
+    if (videoTypes.includes(extension)) return <Film className="text-purple-500" />;
+    if (documentTypes.includes(extension)) return <FileText className="text-blue-500" />;
+    if (archiveTypes.includes(extension)) return <Paperclip className="text-yellow-500" />;
+    if (audioTypes.includes(extension)) return <Music className="text-green-500" />;
+    
+    return <File className="text-gray-400" />;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+      <div className="bg-gray-900 rounded-lg w-full max-w-2xl overflow-hidden border border-gray-800 shadow-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+          <h2 className="text-lg font-medium">Upload Files</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-white">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+        
+        {/* Upload Type Selector */}
+        <div className="flex border-b border-gray-800">
+          <button 
+            onClick={() => setUploadType('file')}
+            className={`px-6 py-3 text-sm font-medium flex items-center ${uploadType === 'file' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-400'}`}
+          >
+            <FileUp className="h-4 w-4 mr-2" />
+            Upload Files
+          </button>
+          <button 
+            onClick={() => setUploadType('folder')}
+            className={`px-6 py-3 text-sm font-medium flex items-center ${uploadType === 'folder' ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-400'}`}
+          >
+            <FolderUp className="h-4 w-4 mr-2" />
+            Upload Folder
+          </button>
+        </div>
+        
+        {/* Upload Area */}
+        <div className="p-6">
+          {/* Drag & Drop Area */}
+          <div 
+            className={`border-2 border-dashed rounded-lg p-8 text-center ${
+              dragging ? 'border-blue-500 bg-blue-500 bg-opacity-10' : 'border-gray-700'
+            }`}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <Upload className="h-12 w-12 mx-auto text-gray-500" />
+            <p className="mt-4 text-sm text-gray-300">
+              Drag and drop files here, or 
+              <button 
+                className="text-blue-500 hover:text-blue-400 ml-1"
+                onClick={() => fileInputRef.current.click()}
+              >
+                browse
+              </button>
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              Maximum file size: 500MB
+            </p>
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileSelect} 
+              className="hidden" 
+              multiple={uploadType === 'file'} 
+              webkitdirectory={uploadType === 'folder' ? '' : undefined}
+              directory={uploadType === 'folder' ? '' : undefined}
+            />
+          </div>
+          
+          {/* File List */}
+          {files.length > 0 && (
+            <div className="mt-6">
+              <h3 className="text-sm font-medium mb-3">Uploading {files.length} {files.length === 1 ? 'file' : 'files'}</h3>
+              
+              <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+                {files.map((file, index) => (
+                  <div key={index} className="bg-gray-800 rounded-md p-3 flex items-center">
+                    <div className="flex-shrink-0">
+                      {getFileTypeIcon(file.name)}
+                    </div>
+                    <div className="ml-3 flex-1 overflow-hidden">
+                      <div className="flex justify-between items-start">
+                        <div className="overflow-hidden">
+                          <p className="text-sm truncate">{file.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {(file.size / (1024 * 1024)).toFixed(2)} MB
+                          </p>
+                        </div>
+                        <button 
+                          onClick={() => removeFile(file.name)}
+                          className="text-gray-500 hover:text-red-500"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                      
+                      {/* Progress bar */}
+                      <div className="mt-2">
+                        <div className="w-full bg-gray-700 rounded-full h-1.5">
+                          <div 
+                            className="bg-blue-600 h-1.5 rounded-full" 
+                            style={{ width: `${uploadProgress[file.name] || 0}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-xs text-right mt-1 text-gray-400">
+                          {uploadProgress[file.name] || 0}%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Footer Actions */}
+        <div className="flex justify-end px-6 py-4 border-t border-gray-800 bg-gray-800">
+          <button 
+            onClick={onClose}
+            className="px-4 py-2 text-sm text-gray-300 hover:text-white"
+          >
+            Cancel
+          </button>
+          <button 
+            className={`ml-3 px-4 py-2 text-sm rounded-md ${
+              files.length === 0 
+                ? 'bg-gray-700 text-gray-400 cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
+            }`}
+            disabled={files.length === 0}
+          >
+            Upload {files.length > 0 ? `(${files.length})` : ''}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

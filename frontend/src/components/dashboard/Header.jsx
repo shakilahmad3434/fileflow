@@ -1,18 +1,33 @@
-import React from "react";
+import React, { useState } from "react";
 import { 
   Search, 
   Settings, 
   Bell, 
-  HelpCircle, 
+  HelpCircle,
+  ChevronRight,
+  ChevronLeft, 
 } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Header = () => {
+  const { isCollapsed, setIsCollapsed } = useAuth();
+
   return (
     <header className="w-full h-16 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700/50 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-50 shadow-sm">
-      {/* Logo/Title */}
-      <h1 className="text-xl font-semibold text-white tracking-tight bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-        File Manager
-      </h1>
+      <div className="flex items-center gap-2">
+        {/* Toggle Button */}
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className=" bg-orange-500 rounded-full p-1 shadow-md hover:bg-orange-600 transition-colors z-10"
+        >
+          {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
+
+        {/* Logo/Title */}
+        <h1 className="text-xl font-semibold text-white tracking-tight bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
+          File Manager
+        </h1>
+      </div>
 
       {/* Search Bar */}
       <div className="flex-1 max-w-2xl mx-4 hidden sm:block">
