@@ -5,7 +5,7 @@ const DashboardLayout = () => {
   return (
     <div className='flex min-h-screen bg-gray-900 text-white'>
       <Sidebar />
-      <main>
+      <main className='w-full'>
         <Outlet /> {/* This renders the child page */}
       </main>
       {/* <AdminFooter /> */}
