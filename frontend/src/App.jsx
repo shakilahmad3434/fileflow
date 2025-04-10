@@ -24,6 +24,7 @@ import Favorites from './pages/dashboard/Favorites';
 import Trash from './pages/dashboard/Trash';
 import ImageStudio from './pages/dashboard/ImageStudio';
 import DocuScan from './pages/dashboard/DocuScan';
+import AudioForge from './pages/dashboard/AudioForge';
 
 // context
 import { useAuth } from './contexts/AuthContext';
@@ -61,6 +62,7 @@ const App = () => {
             <Route path="/trash" element={<Trash />} />
             <Route path="/image-studio" element={<ImageStudio />} />
             <Route path="/docuscan" element={<DocuScan />} />
+            <Route path="/audio-forge" element={<AudioForge />} />
           </Route>
         </Route>
       </Routes>

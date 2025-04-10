@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import { 
-  Search, 
-  Settings, 
-  Bell, 
-  HelpCircle,
-  ChevronRight,
-  ChevronLeft, 
-} from "lucide-react";
+import { Search, Settings, Bell, HelpCircle, ChevronRight, ChevronLeft,} from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import ProfileMenu from "./ProfileMenu";
 
 const Header = () => {
   const { isCollapsed, setIsCollapsed } = useAuth();
+  const [isActiveProfile, setIsActiveProfile] = useState(false)
 
   return (
     <header className="w-full h-16 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700/50 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-50 shadow-sm">
@@ -48,7 +43,7 @@ const Header = () => {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-5">
+      <div className="relative flex items-center gap-5">
         <div>
         <button
           className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"
@@ -76,9 +71,14 @@ const Header = () => {
           <Settings size={20} />
         </button>
         </div>
-        <div className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-500">
+        <div
+          onClick={()=> setIsActiveProfile((prev) => !prev)}
+          className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
+        >
           <img src="/avt.png" alt="profile pic" className="w-full h-full object-cover" />
         </div>
+        <ProfileMenu isActive={isActiveProfile} />
+
       </div>
     </header>
   );
