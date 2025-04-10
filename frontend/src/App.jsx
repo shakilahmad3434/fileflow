@@ -25,7 +25,10 @@ import { useAuth } from './contexts/AuthContext';
 
 
 const App = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading  } = useAuth();
+  if (isLoading) {
+    return <div className="text-white p-8">Loading...</div>; // or spinner
+  }
 
   return (
     <Router>

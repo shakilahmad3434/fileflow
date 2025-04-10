@@ -45,12 +45,25 @@ const Sidebar = () => {
   const [activeItem, setActiveItem] = useState('');
   const { isCollapsed } = useAuth();
   const location = useLocation();
-useEffect(() => {
-  if (location.pathname.includes("/dashboard")) {
-    setActiveItem("Overview Storage");
-  }
-  // You can match other paths similarly
-}, [location]);
+  
+  const pathToLabelMap = {
+    "/dashboard": "Overview Storage",
+    "/storage": "My Storage",
+    "/recents": "Recents",
+    "/favorites": "Favorites",
+    "/trash": "Trash",
+    // Add more as needed
+  };
+  
+  useEffect(() => {
+    const activeLabel = Object.entries(pathToLabelMap).find(([path]) =>
+      location.pathname.startsWith(path)
+    )?.[1];
+  
+    if (activeLabel) setActiveItem(activeLabel);
+  }, [location.pathname]);
+  
+  
 
 
   return (
