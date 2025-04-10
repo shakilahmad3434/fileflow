@@ -19,6 +19,8 @@ import NotFound from './pages/public/NotFound';
 // Admin Pages
 import Dashboard from "./pages/dashboard/Dashboard";
 import MyStorage from './pages/dashboard/MyStorage';
+import Recents from './pages/dashboard/Recents';
+import Favorites from './pages/dashboard/Favorites';
 
 // context
 import { useAuth } from './contexts/AuthContext';
@@ -51,6 +53,8 @@ const App = () => {
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/storage" element={<MyStorage />} />
+            <Route path="/recents" element={<Recents />} />
+            <Route path="/favorites" element={<Favorites />} />
           </Route>
         </Route>
       </Routes>

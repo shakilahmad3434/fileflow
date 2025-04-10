@@ -91,8 +91,8 @@ const Sidebar = () => {
         
         <SidebarSection title="FILE MANAGER" isCollapsed={isCollapsed}>
           <SidebarItem icon={<Share size={18} />} label="My Storage" href="/storage" active={activeItem === "My Storage"} isCollapsed={isCollapsed} onClick={setActiveItem} />
-          <SidebarItem icon={<Clock size={18} />} label="Recents" count={2} isCollapsed={isCollapsed} />
-          <SidebarItem icon={<Star size={18} />} label="Favorites" count={4} isCollapsed={isCollapsed} />
+          <SidebarItem icon={<Clock size={18} />} label="Recents" href="/recents" active={activeItem === "Recents"} count={2} isCollapsed={isCollapsed} onClick={setActiveItem} />
+          <SidebarItem icon={<Star size={18} />} label="Favorites" href="/favorites" active={activeItem === "Favorites"} count={4} isCollapsed={isCollapsed} onClick={setActiveItem} />
           <SidebarItem icon={<Trash2 size={18} />} label="Trash" isCollapsed={isCollapsed} />
         </SidebarSection>
         
