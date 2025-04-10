@@ -1,15 +1,38 @@
-import { useState } from 'react';
-import { User, Settings, LogOut, Download, Share2, Bell, FolderOpen, Star, Trash2, Shield, Users, Cloud } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Settings, LogOut, Download, Share2, FolderOpen, Star, Shield, Users, Cloud } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
-const ProfileMenu = ({isActive}) => {
+const ProfileMenu = ({isOpen, setIsOpen, triggerRef}) => {
   const {logout} = useAuth()
-  if (!isActive) return null;
+  const menuRef = useRef(null);
+  
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        triggerRef.current && // Check if triggerRef exists
+        !triggerRef.current.contains(event.target) // Exclude clicks on the profile pic
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, setIsOpen, triggerRef]);
+
+  if (!isOpen) return null;
   
   return (
         <div 
+        ref={menuRef}
           className="absolute top-12 right-0 w-72 bg-gray-900 rounded-lg shadow-xl border border-gray-800 overflow-hidden z-50"
-          onMouseLeave={() => setIsOpen(false)}
         >
           <div className="p-4">
             {/* Profile Header */}

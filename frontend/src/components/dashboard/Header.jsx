@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Search, Settings, Bell, HelpCircle, ChevronRight, ChevronLeft,} from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import ProfileMenu from "./ProfileMenu";
@@ -6,6 +6,11 @@ import ProfileMenu from "./ProfileMenu";
 const Header = () => {
   const { isCollapsed, setIsCollapsed } = useAuth();
   const [isActiveProfile, setIsActiveProfile] = useState(false)
+  const profilePicRef = useRef(null);
+
+  const toggleProfile = () => {
+    setIsActiveProfile((prev) => !prev);
+  };
 
   return (
     <header className="w-full h-16 bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700/50 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-50 shadow-sm">
@@ -47,12 +52,6 @@ const Header = () => {
         <div>
         <button
           className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"
-          aria-label="Search (Mobile)"
-        >
-          <Search size={20} />
-        </button>
-        <button
-          className="p-2 text-gray-400 hover:text-white hover:bg-gray-700/50 rounded-full transition-colors"
           aria-label="Help"
         >
           <HelpCircle size={20} />
@@ -72,12 +71,13 @@ const Header = () => {
         </button>
         </div>
         <div
-          onClick={()=> setIsActiveProfile((prev) => !prev)}
+          ref={profilePicRef}
+          onClick={toggleProfile}
           className="w-9 h-9 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
         >
           <img src="/avt.png" alt="profile pic" className="w-full h-full object-cover" />
         </div>
-        <ProfileMenu isActive={isActiveProfile} />
+        <ProfileMenu isOpen={isActiveProfile} setIsOpen={setIsActiveProfile} triggerRef={profilePicRef} />
 
       </div>
     </header>

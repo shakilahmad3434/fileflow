@@ -70,7 +70,7 @@ const Dashboard = () => {
     };
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col transition duration-300">
       <Header />
       <div className="bg-gray-900 text-white min-h-screen p-4">
       {/* Header */}

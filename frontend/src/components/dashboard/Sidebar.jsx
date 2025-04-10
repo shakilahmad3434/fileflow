@@ -36,7 +36,7 @@ const Sidebar = () => {
   }, [location.pathname]);
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-60'} h-screen bg-gray-900 border-r border-gray-800 flex flex-col transition-all duration-300`}>
+    <div className={`${isCollapsed ? 'w-20' : 'w-60'} fixed h-screen bg-gray-900 border-r border-gray-800 flex flex-col transition-all duration-300`}>
 
       {/* Logo */}
       <div className="flex items-center p-4">
