@@ -1,8 +1,9 @@
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import React, { useState } from 'react';
-import { login } from '../../services/authService';
+import { login as loginAPI } from '../../services/authService';
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
+    const {login} = useAuth();
 
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
@@ -31,7 +33,7 @@ const Login = () => {
       e.preventDefault()
       setLoading(true)
       const payload = {email: formData.email, password:formData.password}
-      const {data} = await login(payload)
+      const {data} = await loginAPI(payload)
 
       if(formData.rememberMe)
       {
@@ -41,7 +43,10 @@ const Login = () => {
       }
 
       toast.success(data.message, {duration: 3000})
-      setTimeout(() => {navigate('/dashboard')}, 3000)
+      setTimeout(() => {
+        login()
+        navigate('/dashboard')
+      }, 3000)
 
     } catch (err) {
       toast.error(err.response?.data?.message || err.message, {duration: 3000})
