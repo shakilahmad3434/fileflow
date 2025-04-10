@@ -21,6 +21,9 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import MyStorage from './pages/dashboard/MyStorage';
 import Recents from './pages/dashboard/Recents';
 import Favorites from './pages/dashboard/Favorites';
+import Trash from './pages/dashboard/Trash';
+import ImageStudio from './pages/dashboard/ImageStudio';
+import DocuScan from './pages/dashboard/DocuScan';
 
 // context
 import { useAuth } from './contexts/AuthContext';
@@ -55,6 +58,9 @@ const App = () => {
             <Route path="/storage" element={<MyStorage />} />
             <Route path="/recents" element={<Recents />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/trash" element={<Trash />} />
+            <Route path="/image-studio" element={<ImageStudio />} />
+            <Route path="/docuscan" element={<DocuScan />} />
           </Route>
         </Route>
       </Routes>

@@ -8,52 +8,24 @@ import {
   Users,
   Plus,
   HardDrive,
+  MonitorPlay,
+  ScanText,
+  AudioLines,
+  DatabaseZap,
+  CloudFog,
 } from "lucide-react";
+
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLocation } from 'react-router-dom';
-
-const SidebarSection = ({ title, children, isCollapsed }) => {
-  return (
-    <div className="p-4 border-b border-gray-800">
-      {!isCollapsed && <h3 className="text-xs uppercase text-gray-400 mb-2">{title}</h3>}
-      <div className="space-y-1">{children}</div>
-    </div>
-  );
-};
-
-const SidebarItem = ({ icon, label, count, active, href, isCollapsed, onClick }) => {
-  return (
-    <Link 
-      to={href || "#"}
-      onClick={() => onClick(label)}
-      className={`flex items-center justify-between gap-2 px-2 text-sm transition-colors duration-300 py-2 hover:bg-gray-800 rounded-md ${
-        active ? "bg-orange-500 hover:bg-orange-600" : "text-gray-300 hover:bg-muted"
-      }`}
-      title={isCollapsed ? label : ""}
-    >
-      <div className="flex items-center gap-2">
-        {icon}
-        {!isCollapsed && <span>{label}</span>}
-      </div>
-      {!isCollapsed && count && <div className="bg-orange-500 text-xs rounded-md px-2 py-0.5">{count}</div>}
-    </Link>
-  );
-};
+import { pathToLabelMap } from '../../utils/pathLabel';
+import SidebarItem from './sidebar/SidebarItem';
+import SidebarSection from './sidebar/SidebarSection';
 
 const Sidebar = () => {
   const [activeItem, setActiveItem] = useState('');
   const { isCollapsed } = useAuth();
   const location = useLocation();
-  
-  const pathToLabelMap = {
-    "/dashboard": "Overview Storage",
-    "/storage": "My Storage",
-    "/recents": "Recents",
-    "/favorites": "Favorites",
-    "/trash": "Trash",
-    // Add more as needed
-  };
   
   useEffect(() => {
     const activeLabel = Object.entries(pathToLabelMap).find(([path]) =>
@@ -62,15 +34,12 @@ const Sidebar = () => {
   
     if (activeLabel) setActiveItem(activeLabel);
   }, [location.pathname]);
-  
-  
-
 
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-60'} h-screen bg-gray-900 border-r border-gray-800 flex flex-col transition-all duration-300`}>
 
       {/* Logo */}
-      <div className="flex items-center p-4 justify-center">
+      <div className="flex items-center p-4">
           <Link to="/" className="flex items-center space-x-1">
             <div className="w-8 h-8 rounded-md bg-orange-500 flex items-center justify-center">
               <span className="text-white font-bold text-lg">F</span>
@@ -93,7 +62,15 @@ const Sidebar = () => {
           <SidebarItem icon={<Share size={18} />} label="My Storage" href="/storage" active={activeItem === "My Storage"} isCollapsed={isCollapsed} onClick={setActiveItem} />
           <SidebarItem icon={<Clock size={18} />} label="Recents" href="/recents" active={activeItem === "Recents"} count={2} isCollapsed={isCollapsed} onClick={setActiveItem} />
           <SidebarItem icon={<Star size={18} />} label="Favorites" href="/favorites" active={activeItem === "Favorites"} count={4} isCollapsed={isCollapsed} onClick={setActiveItem} />
-          <SidebarItem icon={<Trash2 size={18} />} label="Trash" isCollapsed={isCollapsed} />
+          <SidebarItem icon={<Trash2 size={18} />} label="Trash" href="/trash" active={activeItem === "Trash"} isCollapsed={isCollapsed} onClick={setActiveItem} />
+        </SidebarSection>
+
+        <SidebarSection title="SPECIAL TOOLS" isCollapsed={isCollapsed}>
+          <SidebarItem icon={<MonitorPlay size={18} />} label="Image Studio" href="/image-studio" active={activeItem === "Image Studio"} isCollapsed={isCollapsed} onClick={setActiveItem} />
+          <SidebarItem icon={<ScanText size={18} />} label="DocuScan" href="/docuscan" active={activeItem === "DocuScan"} isCollapsed={isCollapsed} onClick={setActiveItem} />
+          <SidebarItem icon={<AudioLines size={18} />} label="Audio Forge" href="/audio-forge" active={activeItem === "Audio Forge"} isCollapsed={isCollapsed} onClick={setActiveItem} />
+          <SidebarItem icon={<DatabaseZap size={18} />} label="Data Extractor" href="/data-extractor" active={activeItem === "Data Extractor"} isCollapsed={isCollapsed} onClick={setActiveItem} />
+          <SidebarItem icon={<CloudFog size={18} />} label="Cloud Toolkit" href="/cloud-toolkit" active={activeItem === "Cloud Toolkit"} isCollapsed={isCollapsed} onClick={setActiveItem} />
         </SidebarSection>
         
         <SidebarSection title="SHARED FILE" isCollapsed={isCollapsed}>
